@@ -2,16 +2,40 @@ import nodemailer from "nodemailer";
 
 /**
  * Build the Nodemailer transporter from environment variables.
+ * Includes serverless timeouts and automatic Gmail service configuration.
  */
 function getTransporter() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASSWORD;
+
+  if (!user || !pass) {
+    throw new Error(
+      "Missing SMTP credentials: Ensure SMTP_USER and SMTP_PASSWORD are configured in your deployment platform's environment variables (e.g. Vercel dashboard)."
+    );
+  }
+
+  const host = process.env.SMTP_HOST || "smtp.gmail.com";
+  const port = Number(process.env.SMTP_PORT) || 465;
+  const isGmail = host.includes("gmail.com") || user.includes("@gmail.com");
+
+  if (isGmail) {
+    return nodemailer.createTransport({
+      service: "gmail",
+      auth: { user, pass },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
+  }
+
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
-    },
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 }
 

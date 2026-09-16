@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Nubpack — Campus Social Onboarding
 
 A production-quality **Next.js** web application recreating the Nubpack app's landing page, Terms & Conditions, and complete 4-step signup/onboarding flow with real email OTP verification.
@@ -257,3 +258,6 @@ All privileged database operations use the `service_role` key server-side only. 
 | `SMTP_PASSWORD` | Yes | SMTP authentication password |
 | `SMTP_FROM` | Yes | Sender email address |
 | `OTP_EXPIRY_MINUTES` | No | OTP lifetime in minutes (default: 5) |
+=======
+# Landing_Page
+>>>>>>> a8af5d411348ed2dc392fe1ebc6176882236f7ab

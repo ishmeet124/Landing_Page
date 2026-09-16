@@ -66,9 +66,13 @@ export async function POST(request: NextRequest) {
     try {
       await sendOtpEmail(email, otp);
     } catch (smtpError) {
-      console.error("SMTP error:", (smtpError as Error).message);
+      const err = smtpError as Error;
+      console.error("[SMTP Delivery Error]:", err.message);
+      if (err.stack) {
+        console.error(err.stack);
+      }
       return NextResponse.json(
-        { error: "Unable to send verification code. Please try again." },
+        { error: "Unable to send verification code. Please check server logs or verify your deployment environment variables." },
         { status: 500 }
       );
     }
